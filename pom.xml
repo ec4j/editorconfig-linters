@@ -95,7 +95,6 @@
     <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
     <version.maven-resources-plugin>2.7</version.maven-resources-plugin>
     <version.maven-scm-plugin>1.9.4</version.maven-scm-plugin>
-    <version.maven-site-plugin>3.6</version.maven-site-plugin>
     <version.maven-source-plugin>2.4</version.maven-source-plugin>
     <version.maven-surefire-plugin>2.20.1</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.7</version.nexus-staging-maven-plugin>
@@ -138,9 +137,6 @@
     <!-- maven-surefire-plugin -->
     <surefire.useFile>false</surefire.useFile>
     <trimStackTrace>false</trimStackTrace>
-
-    <!-- com.github.github:site-maven-plugin -->
-    <github.global.server>github</github.global.server>
 
   </properties>
 
@@ -379,7 +375,7 @@ limitations under the License.</inlineHeader>
           <configuration>
             <tagNameFormat>@{project.version}</tagNameFormat>
             <preparationGoals>package</preparationGoals>
-            <goals>deploy site</goals>
+            <goals>deploy</goals>
             <releaseProfiles>release</releaseProfiles>
             <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
