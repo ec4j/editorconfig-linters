@@ -69,6 +69,7 @@
   <modules>
     <module>editorconfig-lint-api</module>
     <module>editorconfig-linters</module>
+    <module>editorconfig-linters-bom</module>
   </modules>
 
   <properties>
