@@ -25,6 +25,10 @@ import org.junit.Test;
 
 public class LoggerTest {
 
+    private static void assertOrdinalGt(LogLevel logLevel1, LogLevel logLevel2) {
+        Assert.assertTrue("Expected "+ logLevel1 + ".ordinal() > "+ logLevel2 + ".ordinal()", logLevel1.ordinal() > logLevel2.ordinal());
+    }
+
     @Test
     public void logLevelSupplier() {
         final StringBuilder log = new StringBuilder();
@@ -54,8 +58,19 @@ public class LoggerTest {
         logger.warn("warn filtered");
 
         logger.error("error pass");
+        logLevel.set(LogLevel.NONE);
+        logger.error("error filtered");
 
         Assert.assertEquals("trace pass\ndebug pass\ninfo pass\nwarn pass\nerror pass\n", log.toString());
 
+    }
+
+    @Test
+    public void ordinals() {
+        assertOrdinalGt(LogLevel.TRACE, LogLevel.DEBUG);
+        assertOrdinalGt(LogLevel.DEBUG, LogLevel.INFO);
+        assertOrdinalGt(LogLevel.INFO, LogLevel.WARN);
+        assertOrdinalGt(LogLevel.WARN, LogLevel.ERROR);
+        assertOrdinalGt(LogLevel.ERROR, LogLevel.NONE);
     }
 }

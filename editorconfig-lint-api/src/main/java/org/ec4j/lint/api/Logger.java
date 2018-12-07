@@ -153,10 +153,36 @@ public interface Logger {
     }
 
     /**
+     * Keep the values in the order {@code NONE, ERROR, WARN, INFO, DEBUG, TRACE} because we rely on that in the code
+     * via {@link Enum#ordinal()}.
+     *
      * @since 0.0.7
      */
     enum LogLevel {
-        ERROR, WARN, INFO, DEBUG, TRACE
+        /**
+         * @since 0.1.0
+         */
+        NONE,
+        /**
+         * @since 0.0.7
+         */
+        ERROR,
+        /**
+         * @since 0.0.7
+         */
+        WARN,
+        /**
+         * @since 0.0.7
+         */
+        INFO,
+        /**
+         * @since 0.0.7
+         */
+        DEBUG,
+        /**
+         * @since 0.0.7
+         */
+        TRACE
     }
 
     /**
