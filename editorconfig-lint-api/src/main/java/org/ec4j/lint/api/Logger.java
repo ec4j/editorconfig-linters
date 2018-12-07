@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ec4j.lint.api.Logger.LogLevelSupplier.LogLevelSuppliers;
+
 /**
  * Our own logger interface. We cannot depend on SLF4J, because SLF4J is not available e.g. in Ant.
  *
@@ -30,14 +32,30 @@ public interface Logger {
 
     /**
      * A {@link Logger} with reasonable defaults.
+     *
      * @since 0.0.7
      */
     abstract class AbstractLogger implements Logger {
-        private final LogLevel level;
+        private final LogLevelSupplier levelSupplier;
 
+        /**
+         * @param level
+         *
+         * @deprecated Use {@link AbstractLogger#AbstractLogger(LogLevelSupplier)}
+         */
+        @Deprecated
         public AbstractLogger(LogLevel level) {
+            this(LogLevelSuppliers.constant(level));
+        }
+
+        /**
+         * @param levelSupplier
+         *
+         * @since 0.0.10
+         */
+        public AbstractLogger(LogLevelSupplier levelSupplier) {
             super();
-            this.level = level;
+            this.levelSupplier = levelSupplier;
         }
 
         @Override
@@ -57,27 +75,31 @@ public interface Logger {
 
         @Override
         public boolean isDebugEnabled() {
-            return this.level.ordinal() >= LogLevel.DEBUG.ordinal();
+            return isLogLevelEnabled(LogLevel.DEBUG);
         }
 
         @Override
         public boolean isErrorEnabled() {
-            return this.level.ordinal() >= LogLevel.ERROR.ordinal();
+            return isLogLevelEnabled(LogLevel.ERROR);
         }
 
         @Override
         public boolean isInfoEnabled() {
-            return this.level.ordinal() >= LogLevel.INFO.ordinal();
+            return isLogLevelEnabled(LogLevel.INFO);
+        }
+
+        public boolean isLogLevelEnabled(LogLevel level) {
+            return this.levelSupplier.getLogLevel().ordinal() >= level.ordinal();
         }
 
         @Override
         public boolean isTraceEnabled() {
-            return this.level.ordinal() >= LogLevel.TRACE.ordinal();
+            return isLogLevelEnabled(LogLevel.TRACE);
         }
 
         @Override
         public boolean isWarnEnabled() {
-            return this.level.ordinal() >= LogLevel.WARN.ordinal();
+            return isLogLevelEnabled(LogLevel.WARN);
         }
 
         @Override
@@ -96,17 +118,35 @@ public interface Logger {
 
         private final Appendable out;
 
+        /**
+         * @param level
+         * @param out
+         * @deprecated Use {@link AppendableLogger#AppendableLogger(LogLevelSupplier, Appendable)}
+         */
         public AppendableLogger(LogLevel level, Appendable out) {
             super(level);
             this.out = out;
         }
 
+        /**
+         * @param levelSupplier
+         * @param out
+         *
+         * @since 0.0.10
+         */
+        public AppendableLogger(LogLevelSupplier levelSupplier, Appendable out) {
+            super(levelSupplier);
+            this.out = out;
+        }
+
         @Override
         public void log(LogLevel level, String string, Object... args) {
-            try {
-                out.append(Slf4jFormatter.format(string, args)).append('\n');
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (isLogLevelEnabled(level)) {
+                try {
+                    out.append(Slf4jFormatter.format(string, args)).append('\n');
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -115,7 +155,43 @@ public interface Logger {
     /**
      * @since 0.0.7
      */
-    enum LogLevel {ERROR , WARN, INFO, DEBUG, TRACE}
+    enum LogLevel {
+        ERROR, WARN, INFO, DEBUG, TRACE
+    }
+
+    /**
+     * A supplier of {@link LogLevel}
+     *
+     * @since 0.0.10
+     */
+    interface LogLevelSupplier {
+
+        /**
+         * A collection of {@link LogLevelSupplier} factory methods.
+         *
+         * @since 0.0.10
+         */
+        class LogLevelSuppliers {
+            /**
+             * @param logLevel the {@link LogLevel} constant
+             * @return a new {@link LogLevelSupplier} always returning the given {@code logLevel}
+             */
+            public static LogLevelSupplier constant(final LogLevel logLevel) {
+                return new LogLevelSupplier() {
+                    @Override
+                    public LogLevel getLogLevel() {
+                        return logLevel;
+                    }
+                };
+            }
+        }
+
+        /**
+         * @return the current {@link LogLevel}
+         * @since 0.0.10
+         */
+        LogLevel getLogLevel();
+    }
 
     /**
      * A {@link Logger} implementation that does nothing, use the singleton {@link Logger#NO_OP}.
@@ -159,6 +235,12 @@ public interface Logger {
 
         /** @return always {@code false} */
         @Override
+        public boolean isLogLevelEnabled(LogLevel level) {
+            return false;
+        }
+
+        /** @return always {@code false} */
+        @Override
         public boolean isTraceEnabled() {
             return false;
         }
@@ -185,7 +267,6 @@ public interface Logger {
         }
 
     }
-
 
     /**
      * A formatter based on SLF4J's <a href=
@@ -428,6 +509,7 @@ public interface Logger {
         }
 
     }
+
     /**
      * The no operation singleton
      *
@@ -473,6 +555,12 @@ public interface Logger {
      * @since 0.0.6
      */
     boolean isInfoEnabled();
+
+    /**
+     * @return {@code true} if the given or lower log level is enabled; {@code false} otherwise
+     * @since 0.0.10
+     */
+    boolean isLogLevelEnabled(LogLevel level);
 
     /**
      * @return {@code true} if trace or lower log level is enabled; {@code false} otherwise
