@@ -77,7 +77,7 @@
     <!-- Dependency versions in alphabectic order -->
     <version.junit>4.12</version.junit>
     <version.org.antlr>4.7</version.org.antlr>
-    <version.org.ec4j.core>0.0.3</version.org.ec4j.core>
+    <version.org.ec4j.core>0.0.4</version.org.ec4j.core>
 
     <!-- Plugins and their dependencies -->
     <version.com.mycila.license-maven-plugin>3.0</version.com.mycila.license-maven-plugin>
@@ -213,6 +213,7 @@ limitations under the License.</inlineHeader>
               <exclude>src/test/resources/**/*.txt</exclude>
               <exclude>src/test/resources/**/*.good</exclude>
               <exclude>src/test/resources/**/*.bad</exclude>
+              <exclude>src/test/resources/bom/*</exclude>
               <exclude>src/test/projects/defaults*/**/*.txt</exclude>
               <exclude>src/test/projects/encoding/**/*.properties</exclude>
             </excludes>
