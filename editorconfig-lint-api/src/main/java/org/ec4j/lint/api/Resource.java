@@ -16,7 +16,13 @@
  */
 package org.ec4j.lint.api;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -25,6 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.ec4j.core.Resource.Bom;
 
 /**
  * A readable resource. Consists of a file {@link Path} and a {@link Charset}.
@@ -35,6 +43,7 @@ public class Resource {
 
     /**
      * A utility for line Number %lt;-&gt; file offset transformations.
+     *
      * @since 0.0.9
      */
     static class LineIndex {
@@ -263,9 +272,11 @@ public class Resource {
      */
     private void ensureRead() throws IOException {
         if (text == null) {
+            InputStream in = null;
             Reader r = null;
             try {
-                r = Files.newBufferedReader(absPath, encoding);
+                in = Bom.skipBom(Files.newInputStream(absPath), encoding);
+                r = new BufferedReader(new InputStreamReader(in, encoding));
                 int hash = 0;
                 StringBuilder sb = new StringBuilder(256);
                 char[] cbuf = new char[8192];
@@ -286,6 +297,9 @@ public class Resource {
             } finally {
                 if (r != null) {
                     r.close();
+                }
+                if (in != null) {
+                    in.close();
                 }
             }
         }
@@ -467,9 +481,11 @@ public class Resource {
      * @throws IOException
      */
     public void store() throws IOException {
+        OutputStream out = null;
         Writer w = null;
         try {
-            w = Files.newBufferedWriter(absPath, encoding);
+            out = Bom.writeBom(Files.newOutputStream(absPath), encoding);
+            w = new BufferedWriter(new OutputStreamWriter(out, encoding));
             char[] cbuf = new char[1024];
             int len = text.length();
             int i = 0;
@@ -482,6 +498,9 @@ public class Resource {
         } finally {
             if (w != null) {
                 w.close();
+            }
+            if (out != null) {
+                out.close();
             }
         }
 
