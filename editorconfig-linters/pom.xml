@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.ec4j.linters</groupId>
     <artifactId>editorconfig-linters-parent</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
   </parent>
 
   <artifactId>editorconfig-linters</artifactId>
