@@ -110,10 +110,16 @@ public final class Constants {
             "**/dependency-reduced-pom.xml", //
             "**/release-pom.xml", //
             "**/pom.xml.releaseBackup", //
+            "**/.mvn/**", //
+            "**/mvnw", //
+            "**/mvnw.cmd", //
 
             // Gradle
             "**/build/**", //
             "**/.gradle/**", //
+            "**/gradle/**", //
+            "**/gradlew", //
+            "**/gradlew.bat", //
 
             // code coverage tools
             "**/cobertura.ser", //
