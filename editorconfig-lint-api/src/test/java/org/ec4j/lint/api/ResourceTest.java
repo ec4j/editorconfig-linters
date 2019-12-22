@@ -20,8 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -31,6 +33,7 @@ import org.junit.Test;
 public class ResourceTest {
 
     private Resource doc;
+    private Path path;
 
     private final Path DOCUMENT_PATH = Paths.get("target/test-classes/"
             + ResourceTest.class.getPackage().getName().replace('.', File.separatorChar) + "/document.txt");
@@ -75,7 +78,7 @@ public class ResourceTest {
     }
 
     @Before
-    public void before() {
+    public void before() throws IOException {
         doc = load();
     }
 
@@ -177,8 +180,11 @@ public class ResourceTest {
 
     }
 
-    private Resource load() {
-        return new Resource(DOCUMENT_PATH, DOCUMENT_PATH, StandardCharsets.UTF_8);
+    private Resource load() throws IOException {
+        final String uuid = UUID.randomUUID().toString().replace("-", "");
+        path = Paths.get("target/document-" + uuid + ".txt");
+        Files.copy(DOCUMENT_PATH, path);
+        return new Resource(path, path, StandardCharsets.UTF_8);
     }
 
     @Test
@@ -214,7 +220,7 @@ public class ResourceTest {
 
         doc.store();
 
-        Resource reloadedDoc = load();
+        Resource reloadedDoc = new Resource(path, path, StandardCharsets.UTF_8);
         Assert.assertEquals(TEXT_AFTER_DELETION, reloadedDoc.getText());
         Assert.assertFalse(reloadedDoc.changed());
 

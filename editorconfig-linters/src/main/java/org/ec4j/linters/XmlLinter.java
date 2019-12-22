@@ -479,33 +479,33 @@ public class XmlLinter implements Linter {
             for (int i = len - 1; i >= 0; i--) {
                 char ch = charBuffer.charAt(i);
                 switch (ch) {
-                case '\n':
-                case '\r':
-                    lastIndent = Indent.of(charBufferEndLineNumber, indentLength, edits, editsLength);
-                    charBuffer.setLength(0);
-                    charBufferStartsAtStartOfDocument = null;
-                    return;
-                case ' ':
-                case '\t':
-                    if (ch != indentChar) {
-                        if (edits == null) {
-                            edits = new BitSet();
+                    case '\n':
+                    case '\r':
+                        lastIndent = Indent.of(charBufferEndLineNumber, indentLength, edits, editsLength);
+                        charBuffer.setLength(0);
+                        charBufferStartsAtStartOfDocument = null;
+                        return;
+                    case ' ':
+                    case '\t':
+                        if (ch != indentChar) {
+                            if (edits == null) {
+                                edits = new BitSet();
+                            }
+                            edits.set(editsLength);
                         }
-                        edits.set(editsLength);
-                    }
-                    if (edits != null) {
-                        editsLength++;
-                    }
-                    indentLength++;
-                    break;
-                default:
-                    /*
-                     * No end of line foundIndent in the trailing whitespace. Leave the foundIndent from previous
-                     * ignorable whitespace unchanged
-                     */
-                    charBuffer.setLength(0);
-                    charBufferStartsAtStartOfDocument = null;
-                    return;
+                        if (edits != null) {
+                            editsLength++;
+                        }
+                        indentLength++;
+                        break;
+                    default:
+                        /*
+                         * No end of line foundIndent in the trailing whitespace. Leave the foundIndent from previous
+                         * ignorable whitespace unchanged
+                         */
+                        charBuffer.setLength(0);
+                        charBufferStartsAtStartOfDocument = null;
+                        return;
                 }
             }
             if (charBufferStartsAtStartOfDocument != null && charBufferStartsAtStartOfDocument.booleanValue()) {

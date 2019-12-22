@@ -44,13 +44,13 @@ public interface Linter {
      * to the given {@code violationHandler}.
      *
      * @param resource
-     *            the {@link Resource} to process
+     *        the {@link Resource} to process
      * @param properties
-     *            a set of {@code .editorconfig} properties
+     *        a set of {@code .editorconfig} properties
      * @param violationHandler
-     *            the {@link ViolationHandler} to report to
+     *        the {@link ViolationHandler} to report to
      * @throws IOException
-     *             on I/O problems
+     *         on I/O problems
      */
     void process(Resource resource, ResourceProperties properties, ViolationHandler violationHandler)
             throws IOException;

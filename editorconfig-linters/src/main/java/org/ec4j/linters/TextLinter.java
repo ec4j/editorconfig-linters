@@ -65,7 +65,7 @@ public class TextLinter implements Linter {
      * {@code "\r"} or {@code "\r\n"})
      *
      * @param line the line to escape
-     * @param eol  the {@link EndOfLineValue} detected at the end of {@code line}
+     * @param eol the {@link EndOfLineValue} detected at the end of {@code line}
      * @return the escaped {@code line}
      */
     static String escape(String line, EndOfLineValue eol) {
@@ -74,17 +74,17 @@ public class TextLinter implements Linter {
         }
         final String escapedEol;
         switch (eol) {
-        case lf:
-            escapedEol = "\\n";
-            break;
-        case crlf:
-            escapedEol = "\\r\\n";
-            break;
-        case cr:
-            escapedEol = "\\r";
-            break;
-        default:
-            throw new IllegalStateException("Unexpected " + EndOfLineValue.class.getName() + " '" + eol + "'");
+            case lf:
+                escapedEol = "\\n";
+                break;
+            case crlf:
+                escapedEol = "\\r\\n";
+                break;
+            case cr:
+                escapedEol = "\\r";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected " + EndOfLineValue.class.getName() + " '" + eol + "'");
         }
         return line.substring(0, line.length() - eol.getEndOfLineString().length()) + escapedEol;
     }
@@ -104,12 +104,12 @@ public class TextLinter implements Linter {
             while (start > 0) {
                 char ch = line.charAt(start - 1);
                 switch (ch) {
-                case '\n':
-                case '\r':
-                    start--;
-                    break;
-                default:
-                    return line.substring(start);
+                    case '\n':
+                    case '\r':
+                        start--;
+                        break;
+                    default:
+                        return line.substring(start);
                 }
             }
             return line.substring(start);
@@ -188,29 +188,29 @@ public class TextLinter implements Linter {
                             } else if (actualEolLength < eolLength) {
                                 /* insert */
                                 switch (lastActualEol.charAt(0)) {
-                                case '\r':
-                                    column = line.length() + 1;
-                                    fix = Insert.endOfLine(PropertyType.EndOfLineValue.lf);
-                                    break;
-                                case '\n':
-                                    column = line.length();
-                                    fix = Insert.endOfLine(PropertyType.EndOfLineValue.cr);
-                                    break;
-                                default:
-                                    throw new IllegalStateException();
+                                    case '\r':
+                                        column = line.length() + 1;
+                                        fix = Insert.endOfLine(PropertyType.EndOfLineValue.lf);
+                                        break;
+                                    case '\n':
+                                        column = line.length();
+                                        fix = Insert.endOfLine(PropertyType.EndOfLineValue.cr);
+                                        break;
+                                    default:
+                                        throw new IllegalStateException();
                                 }
                             } else {
                                 /* actualEolLength > eolLength */
                                 fix = new Delete(1);
                                 switch (eol) {
-                                case cr:
-                                    column = line.length();
-                                    break;
-                                case lf:
-                                    column = line.length() - 1;
-                                    break;
-                                default:
-                                    throw new IllegalStateException();
+                                    case cr:
+                                        column = line.length();
+                                        break;
+                                    case lf:
+                                        column = line.length() - 1;
+                                        break;
+                                    default:
+                                        throw new IllegalStateException();
                                 }
                             }
                             final Violation violation = new Violation(resource, new Location(lineNumber, column), fix,
@@ -223,29 +223,25 @@ public class TextLinter implements Linter {
             }
             if (insertFinalNewline) {
                 final int col;
-                if (lastLine == null) {
-                    /* an empty document */
-                    lastActualEol = "";
-                    lineNumber = 1;
-                    col = 1;
-                } else {
+                if (lastLine != null) {
+                    /* A non-empty document */
                     if (lastActualEol == null) {
                         /* probably because eol is null */
                         lastActualEol = findEolString(lastLine);
                     }
                     lineNumber--;
                     col = lastLine.length() + 1;
-                }
-                if (lastActualEol.isEmpty()) {
-                    /* we need to insert an EOL */
-                    if (eol == null) {
-                        // https://github.com/editorconfig/editorconfig/issues/335
-                    } else {
-                        /* eol != null */
-                        final Violation insertFinalNewlineViolation = new Violation(resource,
-                                new Location(lineNumber, col), Insert.endOfLine(eol), this,
-                                PropertyType.insert_final_newline.getName(), "true");
-                        violationHandler.handle(insertFinalNewlineViolation);
+                    if (lastActualEol.isEmpty()) {
+                        /* we need to insert an EOL */
+                        if (eol == null) {
+                            // https://github.com/editorconfig/editorconfig/issues/335
+                        } else {
+                            /* eol != null */
+                            final Violation insertFinalNewlineViolation = new Violation(resource,
+                                    new Location(lineNumber, col), Insert.endOfLine(eol), this,
+                                    PropertyType.insert_final_newline.getName(), "true");
+                            violationHandler.handle(insertFinalNewlineViolation);
+                        }
                     }
                 }
             }

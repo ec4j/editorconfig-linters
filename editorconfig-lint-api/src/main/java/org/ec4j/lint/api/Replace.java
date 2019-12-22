@@ -31,9 +31,9 @@ public class Replace implements Edit {
 
     /**
      * @param replaced
-     *            the replaced {@link EndOfLineValue}
+     *        the replaced {@link EndOfLineValue}
      * @param replacement
-     *            the replacing {@link EndOfLineValue}
+     *        the replacing {@link EndOfLineValue}
      * @return a new {@link Replace} operation that replaces the {@code replaced} EOL string with the {@code replacing}
      *         EOL string
      */
@@ -44,11 +44,11 @@ public class Replace implements Edit {
 
     /**
      * @param replacedLength
-     *            the number of characters to replace
+     *        the number of characters to replace
      * @param indentStyle
-     *            the {@link IndentStyleValue} to use as a replacement
+     *        the {@link IndentStyleValue} to use as a replacement
      * @param replacementLength
-     *            the number of replacement characters to insert
+     *        the number of replacement characters to insert
      * @return a new {@link Replace} operation that replaces the {@code replacedLength} number of characters with the
      *         {@code replacementLength} number of {@code indentStyle.getIndentChar()} characters
      */
@@ -61,13 +61,14 @@ public class Replace implements Edit {
 
     /**
      * @param replaced
-     *            the string to replace
+     *        the string to replace
      * @param replacement
-     *            the replacement
+     *        the replacement
      * @return a new {@link Replace} operation
      */
     public static Replace ofReplaced(String replaced, String replacement) {
-        return new Replace(replaced.length(), replacement, "Replace '" + LintUtils.escape(replaced) + "' with '" + LintUtils.escape(replacement) + "'");
+        return new Replace(replaced.length(), replacement,
+                "Replace '" + LintUtils.escape(replaced) + "' with '" + LintUtils.escape(replacement) + "'");
     }
 
     public static Replace ofReplaced(char[] replaced, char[] replacement) {
@@ -88,11 +89,11 @@ public class Replace implements Edit {
 
     /**
      * @param replacedLength
-     *            the length of the span to replace
+     *        the length of the span to replace
      * @param replacement
-     *            the replacement
+     *        the replacement
      * @param message
-     *            a human readable description of this {@link Replace} operation
+     *        a human readable description of this {@link Replace} operation
      */
     public Replace(int replacedLength, String replacement, String message) {
         super();

@@ -27,9 +27,9 @@ public interface Edit {
      * Perform this {@link Edit} operation on the given {@link Resource} starting at the given {@code offset}.
      *
      * @param resource
-     *            the {@link Resource} to edit
+     *        the {@link Resource} to edit
      * @param offset
-     *            a zero based character index in the given {@code resource} where the edit operation should start
+     *        a zero based character index in the given {@code resource} where the edit operation should start
      */
     void perform(Resource resource, int offset);
 

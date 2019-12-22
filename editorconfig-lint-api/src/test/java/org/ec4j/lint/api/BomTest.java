@@ -50,7 +50,7 @@ public class BomTest {
         doc.store();
 
         final byte[] actual = Files.readAllBytes(workPath);
-        final byte[] expected = new byte[] {(byte) 0xEF, (byte) 0xBB, (byte) 0xBF, 'h', 'e', 'l', 'l', 'o'};
+        final byte[] expected = new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF, 'h', 'e', 'l', 'l', 'o' };
         Assert.assertArrayEquals(expected, actual);
     }
 }

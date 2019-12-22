@@ -128,20 +128,20 @@ public abstract class LineReader extends Reader {
                 StringBuilder sb = new StringBuilder(120);
                 do {
                     switch (ch) {
-                    case '\r':
-                        sb.append((char) ch);
-                        readAhead = read();
-                        if (readAhead == '\n') {
-                            sb.append('\n');
-                            readAhead = -1;
-                        }
-                        return sb.toString();
-                    case '\n':
-                        sb.append((char) ch);
-                        return sb.toString();
-                    default:
-                        sb.append((char) ch);
-                        break;
+                        case '\r':
+                            sb.append((char) ch);
+                            readAhead = read();
+                            if (readAhead == '\n') {
+                                sb.append('\n');
+                                readAhead = -1;
+                            }
+                            return sb.toString();
+                        case '\n':
+                            sb.append((char) ch);
+                            return sb.toString();
+                        default:
+                            sb.append((char) ch);
+                            break;
                     }
                 } while ((ch = read()) >= 0);
                 return sb.toString();
@@ -242,19 +242,19 @@ public abstract class LineReader extends Reader {
             while (offset < len) {
                 char ch = text.charAt(offset++);
                 switch (ch) {
-                case '\r':
-                    sb.append(ch);
-                    if (offset < len && text.charAt(offset) == '\n') {
-                        sb.append('\n');
-                        offset++;
-                    }
-                    return sb.toString();
-                case '\n':
-                    sb.append(ch);
-                    return sb.toString();
-                default:
-                    sb.append(ch);
-                    break;
+                    case '\r':
+                        sb.append(ch);
+                        if (offset < len && text.charAt(offset) == '\n') {
+                            sb.append('\n');
+                            offset++;
+                        }
+                        return sb.toString();
+                    case '\n':
+                        sb.append(ch);
+                        return sb.toString();
+                    default:
+                        sb.append(ch);
+                        break;
                 }
             }
             return sb.toString();
@@ -290,7 +290,7 @@ public abstract class LineReader extends Reader {
 
     /**
      * @param delegate
-     *            the {@link Reader} to read from
+     *        the {@link Reader} to read from
      * @return a new {@link LineReader} that reads from the given {@link Reader}
      */
     public static LineReader of(Reader delegate) {
@@ -299,7 +299,7 @@ public abstract class LineReader extends Reader {
 
     /**
      * @param text
-     *            the {@link StringBuilder} to read from
+     *        the {@link StringBuilder} to read from
      * @return a new {@link LineReader} optimized for reading from a {@link StringBuilder}.
      */
     public static LineReader of(StringBuilder text) {
@@ -310,7 +310,7 @@ public abstract class LineReader extends Reader {
      * @return a {@link String} containing the line incl. the end of line characters or {@code null} in case there are
      *         no more lines to read
      * @throws IOException
-     *             on I/O problems
+     *         on I/O problems
      */
     public abstract String readLine() throws IOException;
 }
