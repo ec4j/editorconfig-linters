@@ -141,12 +141,10 @@ public class TextLinterTest {
                 .property(new Property.Builder(null).type(PropertyType.end_of_line).value("lf").build()) //
                 .build();
         String text = "";
-        String expectedText = "\n";
+        String expectedText = "";
         Resource doc = LinterTestUtils.createDocument(text, ".txt");
 
-        LinterTestUtils.assertParse(linter, doc, expectedText, props, //
-                new Violation(doc, new Location(1, 1), Insert.endOfLine(EndOfLineValue.lf), linter,
-                        PropertyType.insert_final_newline.getName(), "true"));
+        LinterTestUtils.assertParse(linter, doc, expectedText, props);
     }
 
     @Test

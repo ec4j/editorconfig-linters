@@ -223,29 +223,25 @@ public class TextLinter implements Linter {
             }
             if (insertFinalNewline) {
                 final int col;
-                if (lastLine == null) {
-                    /* an empty document */
-                    lastActualEol = "";
-                    lineNumber = 1;
-                    col = 1;
-                } else {
+                if (lastLine != null) {
+                    /* A non-empty document */
                     if (lastActualEol == null) {
                         /* probably because eol is null */
                         lastActualEol = findEolString(lastLine);
                     }
                     lineNumber--;
                     col = lastLine.length() + 1;
-                }
-                if (lastActualEol.isEmpty()) {
-                    /* we need to insert an EOL */
-                    if (eol == null) {
-                        // https://github.com/editorconfig/editorconfig/issues/335
-                    } else {
-                        /* eol != null */
-                        final Violation insertFinalNewlineViolation = new Violation(resource,
-                                new Location(lineNumber, col), Insert.endOfLine(eol), this,
-                                PropertyType.insert_final_newline.getName(), "true");
-                        violationHandler.handle(insertFinalNewlineViolation);
+                    if (lastActualEol.isEmpty()) {
+                        /* we need to insert an EOL */
+                        if (eol == null) {
+                            // https://github.com/editorconfig/editorconfig/issues/335
+                        } else {
+                            /* eol != null */
+                            final Violation insertFinalNewlineViolation = new Violation(resource,
+                                    new Location(lineNumber, col), Insert.endOfLine(eol), this,
+                                    PropertyType.insert_final_newline.getName(), "true");
+                            violationHandler.handle(insertFinalNewlineViolation);
+                        }
                     }
                 }
             }
