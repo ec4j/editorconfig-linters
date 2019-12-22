@@ -86,7 +86,7 @@ public class Location {
      * Shift left (if {@code count}) is negative or right.
      *
      * @param count
-     *            the number of characters to move
+     *        the number of characters to move
      *
      * @return {@code this} if {@code count} is {@code 0} or a new {@link Location}
      */

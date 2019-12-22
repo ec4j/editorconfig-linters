@@ -102,18 +102,18 @@ public class Resource {
                 int end = m.end();
                 if (end < len) {
                     switch (text.charAt(end)) {
-                    case '\n':
-                        b.lineStartOffset(end + 1);
-                        break;
-                    case '\r':
-                        end++;
-                        if (end < len && text.charAt(end) == '\n') {
+                        case '\n':
                             b.lineStartOffset(end + 1);
                             break;
-                        } else {
-                            b.lineStartOffset(end);
-                            break;
-                        }
+                        case '\r':
+                            end++;
+                            if (end < len && text.charAt(end) == '\n') {
+                                b.lineStartOffset(end + 1);
+                                break;
+                            } else {
+                                b.lineStartOffset(end);
+                                break;
+                            }
                     }
                 }
             }
@@ -362,23 +362,23 @@ public class Resource {
             }
             char ch = text.charAt(i);
             switch (ch) {
-            case '\r':
-                if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
-                    i++;
-                    if (i == offset) {
-                        return new Location(line, column + 1);
+                case '\r':
+                    if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
+                        i++;
+                        if (i == offset) {
+                            return new Location(line, column + 1);
+                        }
                     }
-                }
-                line++;
-                column = 1;
-                break;
-            case '\n':
-                line++;
-                column = 1;
-                break;
-            default:
-                column++;
-                break;
+                    line++;
+                    column = 1;
+                    break;
+                case '\n':
+                    line++;
+                    column = 1;
+                    break;
+                default:
+                    column++;
+                    break;
             }
         }
         return new Location(line, column);

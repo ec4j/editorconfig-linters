@@ -32,7 +32,7 @@ public class Insert implements Edit {
      * An insertion of an end of line
      *
      * @param eol
-     *            the {@link EndOfLineValue} to insert
+     *        the {@link EndOfLineValue} to insert
      * @return a new {@link Insert} operation
      */
     public static Insert endOfLine(PropertyType.EndOfLineValue eol) {
@@ -43,9 +43,9 @@ public class Insert implements Edit {
      * An insertion of a character {@code ch} {@code count} times.
      *
      * @param ch
-     *            the character to insert
+     *        the character to insert
      * @param count
-     *            the number of times to insert {@code ch}
+     *        the number of times to insert {@code ch}
      * @return a new {@link Insert} operation
      */
     public static Insert repeat(char ch, int count) {
@@ -53,15 +53,15 @@ public class Insert implements Edit {
         Arrays.fill(insertion, ch);
         final String ofWhat;
         switch (ch) {
-        case ' ':
-            ofWhat = count == 1 ? "space" : "spaces";
-            break;
-        case '\t':
-            ofWhat = count == 1 ? "tab" : "tabs";
-            break;
-        default:
-            ofWhat = count == 1 ? ("'" + ch + "' character") : ("'" + ch + "' characters");
-            break;
+            case ' ':
+                ofWhat = count == 1 ? "space" : "spaces";
+                break;
+            case '\t':
+                ofWhat = count == 1 ? "tab" : "tabs";
+                break;
+            default:
+                ofWhat = count == 1 ? ("'" + ch + "' character") : ("'" + ch + "' characters");
+                break;
         }
         return new Insert(new String(insertion), "Insert " + count + " " + ofWhat);
     }
@@ -81,9 +81,9 @@ public class Insert implements Edit {
 
     /**
      * @param insertion
-     *            the string to insert
+     *        the string to insert
      * @param message
-     *            a human readable message that describes this {@link Insert} operation
+     *        a human readable message that describes this {@link Insert} operation
      */
     public Insert(CharSequence insertion, String message) {
         super();

@@ -60,7 +60,7 @@ public class PathSet {
          * Adds an exclude glob
          *
          * @param glob
-         *            the glob to add
+         *        the glob to add
          * @return this {@link Builder}
          */
         public Builder exclude(String glob) {
@@ -72,7 +72,7 @@ public class PathSet {
          * Adds multiple exclude globs
          *
          * @param globs
-         *            the globs to add
+         *        the globs to add
          * @return this {@link Builder}
          */
         public Builder excludes(List<String> globs) {
@@ -88,7 +88,7 @@ public class PathSet {
          * Adds multiple exclude globs
          *
          * @param globs
-         *            the globs to add
+         *        the globs to add
          * @return this {@link Builder}
          */
         public Builder excludes(String... globs) {
@@ -104,7 +104,7 @@ public class PathSet {
          * Adds an include glob
          *
          * @param glob
-         *            the glob to add
+         *        the glob to add
          * @return this {@link Builder}
          */
         public Builder include(String glob) {
@@ -116,7 +116,7 @@ public class PathSet {
          * Adds multiple include globs
          *
          * @param globs
-         *            the globs to add
+         *        the globs to add
          * @return this {@link Builder}
          */
         public Builder includes(List<String> globs) {
@@ -130,7 +130,7 @@ public class PathSet {
          * Adds multiple include globs
          *
          * @param globs
-         *            the globs to add
+         *        the globs to add
          * @return this {@link Builder}
          */
         public Builder includes(String... globs) {
@@ -155,7 +155,7 @@ public class PathSet {
 
     /**
      * @param includes
-     *            the globs to define a new {@link PathSet}
+     *        the globs to define a new {@link PathSet}
      * @return a {@link PathSet} defined by the given {@code includes}
      */
     public static PathSet ofIncludes(String... includes) {
@@ -173,7 +173,7 @@ public class PathSet {
 
     /**
      * @param path
-     *            the {@link Path} to check
+     *        the {@link Path} to check
      * @return {@code true} if this {@link PathSet} contains the given {@link Path} or {@code false} otherwise
      */
     public boolean contains(Path path) {

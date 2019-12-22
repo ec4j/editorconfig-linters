@@ -60,13 +60,16 @@ public class LineReaderTest {
         lf(new String[] { //
                 "line 1\n", //
                 "line 2\n" //
-        }), lf_(new String[] { //
+        }),
+        lf_(new String[] { //
                 "line 1\n", //
                 "line 2" //
-        }), lflf(new String[] { //
+        }),
+        lflf(new String[] { //
                 "line 1\n", //
                 "\n" //
         });
+
         private final String[] lines;
 
         Doc(String[] lines) {

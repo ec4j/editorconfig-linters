@@ -55,21 +55,21 @@ public class LintUtils {
         while (offset < end) {
             final char ch = source[offset++];
             switch (ch) {
-            case '\r':
-                output.append("\\r");
-                break;
-            case '\n':
-                output.append("\\n");
-                break;
-            case '\t':
-                output.append("\\t");
-                break;
-            case '\\':
-                output.append("\\\\");
-                break;
-            default:
-                output.append(ch);
-                break;
+                case '\r':
+                    output.append("\\r");
+                    break;
+                case '\n':
+                    output.append("\\n");
+                    break;
+                case '\t':
+                    output.append("\\t");
+                    break;
+                case '\\':
+                    output.append("\\\\");
+                    break;
+                default:
+                    output.append(ch);
+                    break;
             }
         }
         return output;
@@ -91,16 +91,16 @@ public class LintUtils {
         char[] sourceChars = source.toCharArray();
         for (int i = 0; i < sourceChars.length; i++) {
             switch (sourceChars[i]) {
-            case '\r':
-            case '\n':
-            case '\t':
-            case '\\':
-                StringBuilder sb = new StringBuilder(sourceChars.length + 2);
-                sb.append(sourceChars, 0, i);
-                escape(sb, sourceChars, i, sourceChars.length - i);
-                return sb.toString();
-            default:
-                break;
+                case '\r':
+                case '\n':
+                case '\t':
+                case '\\':
+                    StringBuilder sb = new StringBuilder(sourceChars.length + 2);
+                    sb.append(sourceChars, 0, i);
+                    escape(sb, sourceChars, i, sourceChars.length - i);
+                    return sb.toString();
+                default:
+                    break;
             }
         }
         return source;

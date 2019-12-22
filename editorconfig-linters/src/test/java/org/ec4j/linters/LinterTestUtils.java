@@ -41,7 +41,8 @@ public class LinterTestUtils {
     public static String assertParse(Linter linter, Resource doc, String expectedText, ResourceProperties props,
             Violation... expected) throws IOException {
         final StringBuilder log = new StringBuilder();
-        ViolationCollector collector = new ViolationCollector(false, "mvn editorconfig:format", new Logger.AppendableLogger(LogLevel.TRACE, log));
+        ViolationCollector collector = new ViolationCollector(false, "mvn editorconfig:format",
+                new Logger.AppendableLogger(LogLevel.TRACE, log));
         collector.startFiles();
         collector.startFile(doc);
         linter.process(doc, props, collector);
@@ -80,11 +81,12 @@ public class LinterTestUtils {
     }
 
     public static Resource createDocument(Path path) throws IOException {
-        final Path testDir = Paths.get("target/test-trees/"+ ((int)(Math.random() * 1000000)));
+        final Path testDir = Paths.get("target/test-trees/" + ((int) (Math.random() * 1000000)));
         Files.createDirectories(testDir);
         final Path testFile = testDir.resolve(path.getFileName());
         Files.copy(path, testFile);
-        final Resource doc = new Resource(testFile, testFile.getFileName(), StandardCharsets.UTF_8, new String(Files.readAllBytes(path)));
+        final Resource doc = new Resource(testFile, testFile.getFileName(), StandardCharsets.UTF_8,
+                new String(Files.readAllBytes(path)));
         return doc;
     }
 

@@ -26,7 +26,8 @@ import org.junit.Test;
 public class LoggerTest {
 
     private static void assertOrdinalGt(LogLevel logLevel1, LogLevel logLevel2) {
-        Assert.assertTrue("Expected "+ logLevel1 + ".ordinal() > "+ logLevel2 + ".ordinal()", logLevel1.ordinal() > logLevel2.ordinal());
+        Assert.assertTrue("Expected " + logLevel1 + ".ordinal() > " + logLevel2 + ".ordinal()",
+                logLevel1.ordinal() > logLevel2.ordinal());
     }
 
     @Test

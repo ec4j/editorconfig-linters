@@ -182,7 +182,6 @@ public final class Constants {
             "**/*.p12", //
             "**/*.pfx", //
 
-
             // flash
             "**/*.swf", //
 
@@ -195,6 +194,5 @@ public final class Constants {
 
     private Constants() {
     }
-
 
 }
