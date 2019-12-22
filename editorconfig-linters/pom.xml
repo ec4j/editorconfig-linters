@@ -30,9 +30,6 @@
   <description>EditorConfig linter implementations</description>
 
   <properties>
-    <checkstyle.excludes>
-      target/**, src/test/resources/java/**
-    </checkstyle.excludes>
 
   </properties>
 
