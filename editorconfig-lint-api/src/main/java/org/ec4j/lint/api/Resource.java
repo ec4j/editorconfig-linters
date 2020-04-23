@@ -137,7 +137,7 @@ public class Resource {
         public int findLineStart(int lineNumber) {
             if (lineNumber == 1) {
                 return 0;
-            } else if (lineNumber < 1 && lineNumber - 2 >= lineStartOffsets.length) {
+            } else if (lineNumber < 1 || lineNumber - 2 >= lineStartOffsets.length) {
                 throw new ArrayIndexOutOfBoundsException(String.format("Cannot access line %d, %s has only %d entries",
                         lineNumber, LineIndex.class.getName(), lineStartOffsets.length + 1));
             } else {
