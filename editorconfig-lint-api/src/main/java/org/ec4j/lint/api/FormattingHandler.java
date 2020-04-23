@@ -89,7 +89,8 @@ public class FormattingHandler implements ViolationHandler {
                     final Integer line = Integer.valueOf(loc.getLine());
                     if (!linesEdited.contains(line)) {
                         int lineStartOffset = currentFile.findLineStart(loc.getLine());
-                        int editOffset = lineStartOffset + loc.getColumn() - 1;
+                        final int col = loc.getColumn();
+                        int editOffset = col < 0 ? lineStartOffset : lineStartOffset + col - 1;
                         final Edit fix = violation.getFix();
                         log.debug("About to perform '{}' at {}, lineStartOffset {}, editOffset {}", fix.getMessage(),
                                 loc, lineStartOffset, editOffset);
