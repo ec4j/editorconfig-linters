@@ -156,7 +156,10 @@ public final class Constants {
             "**/*.sha1", //
 
             // binary files - archives
+            "**/*.ear", //
             "**/*.jar", //
+            "**/*.sar", //
+            "**/*.war", //
             "**/*.zip", //
             "**/*.rar", //
             "**/*.tar", //
