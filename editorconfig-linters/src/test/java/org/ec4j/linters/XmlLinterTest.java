@@ -17,17 +17,23 @@
 package org.ec4j.linters;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.ec4j.core.ResourceProperties;
 import org.ec4j.core.model.Property;
 import org.ec4j.core.model.PropertyType;
 import org.ec4j.core.model.PropertyType.IndentStyleValue;
 import org.ec4j.lint.api.Delete;
+import org.ec4j.lint.api.FormattingHandler;
 import org.ec4j.lint.api.Linter;
 import org.ec4j.lint.api.Location;
+import org.ec4j.lint.api.Logger;
 import org.ec4j.lint.api.Replace;
 import org.ec4j.lint.api.Resource;
 import org.ec4j.lint.api.Violation;
+import org.ec4j.lint.api.ViolationCollector;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class XmlLinterTest {
@@ -297,11 +303,7 @@ public class XmlLinterTest {
                 "</root>"; //
         Resource doc = LinterTestUtils.createDocument(text, ".xml");
 
-        final ResourceProperties props = ResourceProperties.builder() //
-                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
-                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
-                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
-                .build();
+        final ResourceProperties props = createConfig();
 
         LinterTestUtils.assertParse(linter, doc, expectedText, props, //
                 new Violation(doc, new Location(5, 1), //
@@ -459,11 +461,7 @@ public class XmlLinterTest {
                 "</root>"; //
         Resource doc = LinterTestUtils.createDocument(text, ".xml");
 
-        final ResourceProperties props = ResourceProperties.builder() //
-                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
-                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
-                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
-                .build();
+        final ResourceProperties props = createConfig();
 
         LinterTestUtils.assertParse(linter, doc, expectedText, props, //
                 new Violation(doc, new Location(3, 1), //
@@ -703,11 +701,7 @@ public class XmlLinterTest {
                 "</root>"; //
         Resource doc = LinterTestUtils.createDocument(text, ".xml");
 
-        final ResourceProperties props = ResourceProperties.builder() //
-                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
-                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
-                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
-                .build();
+        final ResourceProperties props = createConfig();
 
         LinterTestUtils.assertParse(linter, doc, expectedText, props, //
                 new Violation(doc, new Location(3, 1), //
@@ -787,11 +781,7 @@ public class XmlLinterTest {
                 "</root>"; //
         Resource doc = LinterTestUtils.createDocument(text, ".xml");
 
-        final ResourceProperties props = ResourceProperties.builder() //
-                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
-                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
-                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
-                .build();
+        final ResourceProperties props = createConfig();
 
         LinterTestUtils.assertParse(linter, doc, expectedText, props, //
                 new Violation(doc, new Location(3, 1), //
@@ -799,4 +789,58 @@ public class XmlLinterTest {
                         IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "1"));
     }
 
+    private ResourceProperties createConfig() {
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+        return props;
+    }
+
+    @Test
+    public void test4PR14() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n"
+                + "<module name=\"Checker\">\n"
+                + "  <module name=\"TreeWalker\">\n"
+                + "      <module name=\"SuppressionCommentFilter\">\n"
+                + "\t\t\t<!-- ABC-->\n"
+                + "\t        <property name=\"checkFormat\" value=\"RegexpSinglelineJavaCheck\"/>\n"
+                + "\t    </module>\n"
+                + "\t        </module>\n"
+                + "</module>";
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+        final ResourceProperties props = createConfig();
+        final StringBuilder log = new StringBuilder();
+        ViolationCollector collector = new ViolationCollector(false, "mvn editorconfig:format",
+                new Logger.AppendableLogger(Logger.LogLevel.TRACE, log));
+        collector.startFiles();
+        collector.startFile(doc);
+        linter.process(doc, props, collector);
+        collector.endFile();
+        collector.endFiles();
+
+        Map<Resource, List<Violation>> violations = collector.getViolations();
+        List<Violation> actual = violations.get(doc);
+
+        FormattingHandler formatter = new FormattingHandler(false, ".bak", Logger.NO_OP);
+        formatter.startFiles();
+        formatter.startFile(doc);
+        linter.process(doc, props, formatter);
+        formatter.endFile();
+        formatter.endFiles();
+
+        System.out.println("==>" + doc.getText());
+        String expectedText = "<?xml version=\"1.0\"?>\n"
+                + "<module name=\"Checker\">\n"
+                + " <module name=\"TreeWalker\">\n"
+                + "  <module name=\"SuppressionCommentFilter\">\n"
+                + "\t\t\t<!-- ABC-->\n"
+                + "   <property name=\"checkFormat\" value=\"RegexpSinglelineJavaCheck\"/>\n"
+                + "  </module>\n"
+                + " </module>\n"
+                + "</module>";
+
+        Assert.assertEquals(expectedText, doc.getText());
+    }
 }
