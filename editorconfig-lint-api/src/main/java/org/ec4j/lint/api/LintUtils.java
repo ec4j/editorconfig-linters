@@ -106,4 +106,36 @@ public class LintUtils {
         return source;
     }
 
+    /**
+     * Asserts that the given {@code number} is a valid line number or a valid column number - i.e. a number greater or
+     * equal to {@code 1}.
+     *
+     * @param number the line number or column number to validate
+     * @param name {@code "line"} or {@code "column"}
+     * @return the {@code number}
+     * @throws IllegalArgumentException if the {@code number} is invalid
+     */
+    public static int validateLineOrColumnNumber(int number, String name) {
+        if (number < 1) {
+            throw new IllegalArgumentException(String.format("%s must be greater or equal to 1", name));
+        }
+        return number;
+    }
+
+    /**
+     * Asserts that the given {@code length} is a valid length - i.e. a number greater or
+     * equal to {@code 0}.
+     *
+     * @param length the length to validate
+     * @param name the name of the validated parameter
+     * @return the {@code length}
+     * @throws IllegalArgumentException if the {@code length} is invalid
+     */
+    public static int validateLength(int length, String name) {
+        if (length < 0) {
+            throw new IllegalArgumentException(String.format("%s must be greater or equal to 0", name));
+        }
+        return length;
+    }
+
 }
