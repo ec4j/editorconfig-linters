@@ -38,8 +38,8 @@ public class Location {
 
     public Location(int line, int column) {
         super();
-        this.line = line;
-        this.column = column;
+        this.line = LintUtils.validateLineOrColumnNumber(line, "line");
+        this.column = LintUtils.validateLineOrColumnNumber(column, "column");
     }
 
     @Override

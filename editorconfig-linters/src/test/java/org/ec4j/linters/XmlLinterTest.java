@@ -34,6 +34,30 @@ public class XmlLinterTest {
     private final Linter linter = new XmlLinter();
 
     @Test
+    public void ignoreMisalignedComment() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t\t\t<!-- comment -->\n" + //
+                " <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        String expectedText = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t\t\t<!-- comment -->\n" + //
+                " <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+
+        /* No violations expected */
+        LinterTestUtils.assertParse(linter, doc, expectedText, props);
+    }
+
+    @Test
     public void indentedRootElement() throws IOException {
         String text = "        <root>\n" + //
                 "            <child1>\n" + //
@@ -141,6 +165,55 @@ public class XmlLinterTest {
                         IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "2"), //
                 new Violation(doc, new Location(6, 3), new Delete(2), linter, PropertyType.indent_style.getName(),
                         IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "2"));
+    }
+
+    @Test
+    public void spacesForMixedTooLong() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t     \t<text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        String expectedText = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                " <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+
+        LinterTestUtils.assertParse(linter, doc, expectedText, props, new Violation(doc, new Location(3, 1), //
+                Replace.indent(7, IndentStyleValue.space, 1), linter, PropertyType.indent_style.getName(),
+                IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "1"));
+    }
+
+    @Test
+    public void spacesForTabsAfterMisalignedComment() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t\t\t<!-- comment -->\n" + //
+                "\t     <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        String expectedText = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t\t\t<!-- comment -->\n" + //
+                " <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+
+        /* No violations expected */
+        LinterTestUtils.assertParse(linter, doc, expectedText, props, new Violation(doc, new Location(4, 1), //
+                new Delete(5), linter, PropertyType.indent_style.getName(),
+                IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "1"));
     }
 
     @Test
@@ -797,6 +870,29 @@ public class XmlLinterTest {
                 new Violation(doc, new Location(3, 1), //
                         Replace.indent(1, IndentStyleValue.space, 1), linter, PropertyType.indent_style.getName(),
                         IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "1"));
+    }
+
+    @Test
+    public void spacesForTabsTooLong() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t     <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        String expectedText = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                " <text-1>text in text-1</text-1>\n" + //
+                "</root>"; //
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("1").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("space").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+
+        LinterTestUtils.assertParse(linter, doc, expectedText, props, new Violation(doc, new Location(3, 1), //
+                new Delete(5), linter, PropertyType.indent_style.getName(),
+                IndentStyleValue.space.name(), PropertyType.indent_size.getName(), "1"));
     }
 
 }

@@ -91,19 +91,19 @@ public class XmlLinter implements Linter {
         private static class ElementEntry {
             private final String elementName;
 
-            private final FormatParserListener.Indent expectedIndent;
+            private final Indent expectedIndent;
 
-            private final FormatParserListener.Indent foundIndent;
+            private final Indent foundIndent;
 
-            ElementEntry(String elementName, FormatParserListener.Indent foundIndent) {
+            ElementEntry(String elementName, Indent foundIndent) {
                 super();
                 this.elementName = elementName;
                 this.foundIndent = foundIndent;
                 this.expectedIndent = foundIndent;
             }
 
-            ElementEntry(String elementName, FormatParserListener.Indent foundIndent,
-                    FormatParserListener.Indent expectedIndent) {
+            ElementEntry(String elementName, Indent foundIndent,
+                    Indent expectedIndent) {
                 super();
                 this.elementName = elementName;
                 this.foundIndent = foundIndent;
@@ -114,66 +114,6 @@ public class XmlLinter implements Linter {
             public String toString() {
                 return "<" + elementName + "> " + foundIndent;
             }
-        }
-
-        /**
-         * An indent occurrence within a file characterized by {@link #lineNumber} and {@link #size}.
-         */
-        static class Indent {
-
-            /**
-             * An {@link Indent} usable at the beginning of a typical XML file.
-             */
-            public static final FormatParserListener.Indent START = new Indent(1, 0, -1, 0);
-
-            public static Indent of(int lineNumber, int size, BitSet edits, int editsLength) {
-                if (editsLength == 0) {
-                    return new Indent(lineNumber, size, -1, 0);
-                } else {
-                    int badStartColumn = 1;
-                    int badLength = editsLength;
-                    for (int i = editsLength - 1; i >= 0; i--) {
-                        if (!edits.get(i)) {
-                            badLength--;
-                            badStartColumn++;
-                        } else {
-                            break;
-                        }
-                    }
-                    return new Indent(lineNumber, size, badStartColumn, badLength);
-                }
-            }
-
-            /**
-             * The number of elements that need to be replaced or removed.
-             */
-            private final int badLength;
-
-            /** The 1-based column number where the first bad indent character is located */
-            private final int badStartColumn;
-
-            /**
-             * The line number where this {@link Indent} occurs. The first line number in a file is {@code 1}.
-             */
-            private final int lineNumber;
-
-            /** The number of spaces in this {@link Indent}. */
-            private final int size;
-
-            Indent(int lineNumber, int size, int badStartColumn, int badLength) {
-                super();
-                this.lineNumber = lineNumber;
-                this.size = size;
-                this.badStartColumn = badStartColumn;
-                this.badLength = badLength;
-            }
-
-            @Override
-            public String toString() {
-                return "Indent [lineNumber=" + lineNumber + ", size=" + size + ", badLength=" + badLength
-                        + ", badStartColumn=" + badStartColumn + "]";
-            }
-
         }
 
         static class LastTerminalFinder extends AbstractParseTreeVisitor<Object> {
@@ -211,7 +151,7 @@ public class XmlLinter implements Linter {
 
         private final IndentStyleValue indentStyle;
 
-        private FormatParserListener.Indent lastIndent = Indent.START;
+        private Indent lastIndent = Indent.START;
 
         private final Linter linter;
 
@@ -235,7 +175,7 @@ public class XmlLinter implements Linter {
         private void adjustIndentLength(Token start, Indent foundIndent, final int expectedIndent,
                 int columnAdjustment) {
             /* proper indentation characters, but bad length */
-            final int opValue = expectedIndent - foundIndent.size;
+            final int opValue = expectedIndent - foundIndent.getSize();
 
             final Edit fix;
             final int len = Math.abs(opValue);
@@ -300,12 +240,12 @@ public class XmlLinter implements Linter {
                         + " around line " + start.getLine() + " and column " + (start.getCharPositionInLine() + 1));
             }
             final ElementEntry startEntry = stack.pop();
-            final int expectedIndent = startEntry.expectedIndent.size;
-            if (lastIndent.lineNumber != startEntry.foundIndent.lineNumber) {
-                if (lastIndent.badLength > 0) {
+            final int expectedIndent = startEntry.expectedIndent.getSize();
+            if (lastIndent.getLineNumber() != startEntry.foundIndent.getLineNumber()) {
+                if (lastIndent.getBadLength() > 0) {
                     /* the length of the indent is correct, but some indent chars need to get replaced */
                     replaceIndentCharsAndAdjustIndentLength(expectedIndent, lastIndent, ctx.getStart());
-                } else if (lastIndent.size != expectedIndent) {
+                } else if (lastIndent.getSize() != expectedIndent) {
                     /*
                      * diff should be zero unless we are on the same line as start element
                      */
@@ -360,22 +300,22 @@ public class XmlLinter implements Linter {
                  * note that we use parentEntry.expectedIndent rather than parentEntry.foundIndent this is to make the
                  * messages more useful
                  */
-                final int indentDiff = currentEntry.foundIndent.size - parentEntry.expectedIndent.size;
-                final int expectedIndent = parentEntry.expectedIndent.size + indentSize;
-                final int badLength = lastIndent.badLength;
-                if (indentDiff == 0 && currentEntry.foundIndent.lineNumber == parentEntry.foundIndent.lineNumber) {
+                final int indentDiff = currentEntry.foundIndent.getSize() - parentEntry.expectedIndent.getSize();
+                final int expectedIndent = parentEntry.expectedIndent.getSize() + indentSize;
+                final int badLength = lastIndent.getBadLength();
+                if (indentDiff == 0 && currentEntry.foundIndent.getLineNumber() == parentEntry.foundIndent.getLineNumber()) {
                     /*
                      * Zero indentDiff acceptable only if current is on the same line as parent. This is OK, so do
                      * nothing
                      */
                 } else if (badLength > 0) {
-                    /* the length of the indent is correct, but some indent chars need to get replaced */
+                    /* some indent chars need to get replaced and length of the indent might not be correct */
                     replaceIndentCharsAndAdjustIndentLength(expectedIndent, lastIndent, ctx.getStart());
 
                     if (pushToStack && indentDiff != indentSize) {
                         /* reset the expected indent in the entry we'll push */
                         currentEntry = new ElementEntry(qName, lastIndent,
-                                new Indent(lastIndent.lineNumber, expectedIndent, -1, 0));
+                                new Indent(lastIndent.getLineNumber(), expectedIndent, -1, 0));
                     }
                 } else if (indentDiff != indentSize) {
                     adjustIndentLength(ctx.getStart(), currentEntry.foundIndent, expectedIndent, 1);
@@ -383,7 +323,7 @@ public class XmlLinter implements Linter {
                     if (pushToStack) {
                         /* reset the expected indent in the entry we'll push */
                         currentEntry = new ElementEntry(qName, lastIndent,
-                                new Indent(lastIndent.lineNumber, expectedIndent, -1, 0));
+                                new Indent(lastIndent.getLineNumber(), expectedIndent, -1, 0));
                     }
                 }
             }
@@ -516,22 +456,37 @@ public class XmlLinter implements Linter {
         }
 
         private void replaceIndentCharsAndAdjustIndentLength(int expectedIndent, Indent lastIndent, Token start) {
-            final int diff = expectedIndent - lastIndent.size;
-            final int replacementLength = lastIndent.badLength + diff;
-            final Edit fix;
-            final int column;
-            if (replacementLength <= 0) {
-                fix = new Delete(-1 * diff);
-                if (replacementLength * -1 > lastIndent.badLength) {
-                    column = lastIndent.badStartColumn + replacementLength;
-                } else {
-                    column = lastIndent.badStartColumn;
-                }
-            } else {
-                fix = Replace.indent(lastIndent.badLength, indentStyle, replacementLength);
-                column = lastIndent.badStartColumn;
+            int badLength = lastIndent.getBadLength();
+            if (badLength == 0) {
+                throw new IllegalStateException(
+                        "Avoid calling replaceIndentCharsAndAdjustIndentLength() when lastIndent.getBadLength() == 0");
             }
 
+            /* diff stores how much is missing to the expected size; or too much - then diff will be negative */
+            final int diff = expectedIndent - lastIndent.getSize();
+
+            final Edit fix;
+            final int column;
+            final int deletionLength = -diff;
+            if (deletionLength >= 0 && deletionLength >= badLength) {
+                /* We need to shorten and a deletion will be enough */
+                fix = new Delete(deletionLength);
+                /*
+                 * Let's figure out where the deletion should start;
+                 * make sure that the deletion ends in the indent region
+                 */
+                final int overflow = lastIndent.getBadStartColumn() - 1 + deletionLength - lastIndent.getSize();
+                if (overflow > 0) {
+                    column = lastIndent.getBadStartColumn() - overflow;
+                    assert column >= 1 : "column must be >= 1";
+                } else {
+                    column = lastIndent.getBadStartColumn();
+                }
+            } else {
+                /* We need to add some chars and replace the whole bad region */
+                fix = Replace.indent(badLength, indentStyle, badLength + diff);
+                column = lastIndent.getBadStartColumn();
+            }
             final Location loc = new Location(start.getLine(), column);
             final Violation violation = new Violation(file, loc, fix, linter, PropertyType.indent_style.getName(),
                     indentStyle.name(), PropertyType.indent_size.getName(), String.valueOf(indentSize));
