@@ -191,7 +191,10 @@ public final class Constants {
             // fonts
             "**/*.eot", //
             "**/*.ttf", //
-            "**/*.woff" //
+            "**/*.woff", //
+
+            // log files
+            "**/*.log" //
 
     )));
 
