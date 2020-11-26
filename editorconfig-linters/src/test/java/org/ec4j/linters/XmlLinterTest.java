@@ -34,6 +34,26 @@ public class XmlLinterTest {
     private final Linter linter = new XmlLinter();
 
     @Test
+    public void ignoreIndentSizeWithTabs() throws Exception {
+        String text = "<?xml version=\"1.0\"?>\n" + //
+                "<root>\n" + //
+                "\t<level-1>\n" + //
+                "\t\t<level-2>text in level-2</level-2>\n" + //
+                "\t</level-1>\n" + //
+                "</root>"; //
+        Resource doc = LinterTestUtils.createDocument(text, ".xml");
+
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.indent_size).value("4").build()) //
+                .property(new Property.Builder(null).type(PropertyType.indent_style).value("tab").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+
+        /* No violations expected */
+        LinterTestUtils.assertParse(linter, doc, text, props);
+    }
+
+    @Test
     public void ignoreMisalignedComment() throws Exception {
         String text = "<?xml version=\"1.0\"?>\n" + //
                 "<root>\n" + //
