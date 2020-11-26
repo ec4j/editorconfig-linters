@@ -523,14 +523,24 @@ public class XmlLinter implements Linter {
             throws IOException {
         final Logger log = violationHandler.getLogger();
         final IndentStyleValue indentStyle = properties.getValue(PropertyType.indent_style, null, false);
-        final Integer indentSize = properties.getValue(PropertyType.indent_size, null, false);
+        final Integer effectiveIndentSize;
+        if (indentStyle == IndentStyleValue.tab) {
+            /*
+             * If indent_style is tab, the effective indent size is always 1.
+             * It is because EditorConfig defines indent_size as a visual size, not binary size
+             * and the visual size is not important to a headless tool like ec4j
+             */
+            effectiveIndentSize = Integer.valueOf(1);
+        } else {
+            effectiveIndentSize = properties.getValue(PropertyType.indent_size, null, false);
+        }
         if (log.isTraceEnabled()) {
             log.trace("Checking indent_style value '{}' in {}", indentStyle, resource);
-            log.trace("Checking indent_size value '{}' in {}", indentSize, resource);
+            log.trace("Checking indent_size value '{}' in {}", effectiveIndentSize, resource);
         }
-        if (indentStyle == null && indentSize == null) {
+        if (indentStyle == null && effectiveIndentSize == null) {
             /* nothing to do */
-        } else if (indentStyle != null && indentSize != null) {
+        } else if (indentStyle != null && effectiveIndentSize != null) {
             try (Reader in = resource.openReader()) {
                 XmlParser parser = new XmlParser(
                         new CommonTokenStream(new XmlLexer(CharStreams.fromReader(in, resource.toString()))));
@@ -538,7 +548,7 @@ public class XmlLinter implements Linter {
                 ParseTree rootContext = parser.document();
                 ParseTreeWalker walker = new ParseTreeWalker();
                 walker.walk(
-                        new FormatParserListener(this, resource, indentStyle, indentSize.intValue(), violationHandler),
+                        new FormatParserListener(this, resource, indentStyle, effectiveIndentSize.intValue(), violationHandler),
                         rootContext);
             }
         } else {
