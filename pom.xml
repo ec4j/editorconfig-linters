@@ -91,12 +91,12 @@
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-install-plugin>2.5.2</version.maven-install-plugin>
     <version.maven-jar-plugin>2.6</version.maven-jar-plugin>
-    <version.maven-javadoc-plugin>2.10.3</version.maven-javadoc-plugin>
+    <version.maven-javadoc-plugin>3.2.0</version.maven-javadoc-plugin>
     <version.maven-plugin-plugin>3.5.2</version.maven-plugin-plugin>
     <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
     <version.maven-resources-plugin>2.7</version.maven-resources-plugin>
     <version.maven-scm-plugin>1.9.4</version.maven-scm-plugin>
-    <version.maven-source-plugin>2.4</version.maven-source-plugin>
+    <version.maven-source-plugin>3.1.0</version.maven-source-plugin>
     <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.7</version.nexus-staging-maven-plugin>
     <version.org.codehaus.buildnumber-maven-plugin>1.4</version.org.codehaus.buildnumber-maven-plugin>
@@ -112,9 +112,6 @@
     <!-- license-maven-plugin -->
     <license.failIfMissing>true</license.failIfMissing>
     <license.failIfUnknown>true</license.failIfUnknown>
-
-    <!-- -Xdoclint:none disables javadoc validation -->
-    <javadoc.doclint>-Xdoclint:none</javadoc.doclint>
 
     <!-- nexus-staging-maven-plugin -->
     <autoReleaseAfterClose>true</autoReleaseAfterClose>
@@ -512,9 +509,40 @@ limitations under the License.</inlineHeader>
             </executions>
           </plugin>
 
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <source>8</source>
+              <additionalOptions>-Xdoclint:none</additionalOptions>
+              <detectOfflineLinks>false</detectOfflineLinks>
+              <detectJavaApiLink>false</detectJavaApiLink>
+            </configuration>
+          </plugin>
+
         </plugins>
       </build>
-
     </profile>
   </profiles>
 
