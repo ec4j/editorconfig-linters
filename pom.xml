@@ -75,7 +75,7 @@
   <properties>
 
     <!-- Dependency versions in alphabectic order -->
-    <version.junit>4.12</version.junit>
+    <version.junit>4.13.1</version.junit>
     <version.org.antlr>4.7</version.org.antlr>
     <version.org.ec4j.core>0.2.1</version.org.ec4j.core>
 
