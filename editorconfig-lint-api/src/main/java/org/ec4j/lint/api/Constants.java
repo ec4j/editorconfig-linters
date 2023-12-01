@@ -133,6 +133,9 @@ public final class Constants {
             // Netbeans
             "**/nb-configuration.xml", //
 
+            // vim
+            "**/.*.swp",
+
             // binary files - images
             "**/*.jpg", //
             "**/*.png", //
