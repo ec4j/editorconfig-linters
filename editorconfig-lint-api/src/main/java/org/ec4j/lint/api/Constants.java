@@ -128,7 +128,7 @@ public final class Constants {
             "**/*.iml", //
             "**/*.ipr", //
             "**/*.iws", //
-            ".idea/**", //
+            "**/.idea/**", //
 
             // Netbeans
             "**/nb-configuration.xml", //
