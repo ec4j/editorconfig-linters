@@ -196,6 +196,7 @@ limitations under the License.</inlineHeader>
               <exclude>LICENSE</exclude>
               <exclude>mvnw</exclude>
               <exclude>mvnw.cmd</exclude>
+              <exclude>**/renovate.json5</exclude>
               <exclude>src/main/antlr4/org/ec4j/linters/xml/XmlLexer.g4</exclude><!-- BSD License -->
               <exclude>src/main/antlr4/org/ec4j/linters/xml/XmlParser.g4</exclude><!-- BSD License -->
               <exclude>src/test/resources/**/*.txt</exclude>
