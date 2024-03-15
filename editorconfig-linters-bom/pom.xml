@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.ec4j.linters</groupId>
     <artifactId>editorconfig-linters-parent</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>editorconfig-linters-bom</artifactId>
@@ -42,13 +42,13 @@
       <dependency>
         <groupId>org.ec4j.linters</groupId>
         <artifactId>editorconfig-lint-api</artifactId>
-        <version>2.2.2</version>
+        <version>2.2.3-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.ec4j.linters</groupId>
         <artifactId>editorconfig-linters</artifactId>
-        <version>2.2.2</version>
+        <version>2.2.3-SNAPSHOT</version>
       </dependency>
 
     </dependencies>
