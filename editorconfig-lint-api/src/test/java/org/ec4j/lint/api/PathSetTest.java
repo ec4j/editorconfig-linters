@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 EditorConfig Linters
  * project contributors as indicated by the @author tags.
  *
