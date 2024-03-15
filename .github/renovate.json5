@@ -16,6 +16,7 @@
       "matchPackagePatterns": [
         "^net.revelc.code:impsort-maven-plugin", // last java 8 compatible release
         "^net.revelc.code.formatter:formatter-maven-plugin", // last java 8 compatible release
+        "^org.antlr:antlr4-runtime", // last java 8 compatible release
       ],
       "matchUpdateTypes": [
         "major", "minor"
