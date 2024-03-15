@@ -81,7 +81,7 @@
 
     <!-- Plugins and their dependencies -->
     <version.com.mycila.license-maven-plugin>3.0</version.com.mycila.license-maven-plugin>
-    <version.formatter-maven-plugin>2.11.0</version.formatter-maven-plugin>
+    <version.formatter-maven-plugin>2.23.0</version.formatter-maven-plugin>
     <version.impsort-maven-plugin>1.3.2</version.impsort-maven-plugin>
     <version.maven-antrun-plugin>1.8</version.maven-antrun-plugin>
     <version.maven-clean-plugin>2.6.1</version.maven-clean-plugin>
