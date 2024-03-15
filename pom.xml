@@ -76,7 +76,7 @@
 
     <!-- Dependency versions in alphabectic order -->
     <version.junit>4.13.2</version.junit>
-    <version.org.antlr>4.9.3</version.org.antlr>
+    <version.org.antlr>4.13.1</version.org.antlr>
     <version.org.ec4j.core>0.2.1</version.org.ec4j.core>
 
     <!-- Plugins and their dependencies -->
