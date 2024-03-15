@@ -15,6 +15,7 @@
       "description": "Ignore major and minor updates for matched packages (allow only patch updates)",
       "matchPackagePatterns": [
         "^net.revelc.code:impsort-maven-plugin", // last java 8 compatible release
+        "^net.revelc.code.formatter:formatter-maven-plugin", // last java 8 compatible release
       ],
       "matchUpdateTypes": [
         "major", "minor"
