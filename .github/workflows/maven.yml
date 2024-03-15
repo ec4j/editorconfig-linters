@@ -37,7 +37,7 @@ jobs:
       if: failure()
       run: cat target/it/rpkg-and-run-tests/build.log target/it/rpkg-and-run-tests2/build.log
   windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         java: [ 8, 11, 14 ]
