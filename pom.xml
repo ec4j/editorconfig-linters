@@ -77,7 +77,7 @@
     <!-- Dependency versions in alphabectic order -->
     <version.junit>4.13.2</version.junit>
     <version.org.antlr>4.9.3</version.org.antlr>
-    <version.org.ec4j.core>1.0.0</version.org.ec4j.core>
+    <version.org.ec4j.core>1.1.0</version.org.ec4j.core>
 
     <!-- Plugins and their dependencies -->
     <version.com.mycila.license-maven-plugin>4.6</version.com.mycila.license-maven-plugin>
