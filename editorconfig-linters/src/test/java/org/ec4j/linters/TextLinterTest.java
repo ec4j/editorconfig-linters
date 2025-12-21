@@ -135,6 +135,31 @@ public class TextLinterTest {
     }
 
     @Test
+    public void insert_final_newline_and_trim_trailing_whitespace() throws IOException {
+        final ResourceProperties props = ResourceProperties.builder() //
+                .property(new Property.Builder(null).type(PropertyType.insert_final_newline).value("true").build()) //
+                .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
+                .build();
+        String text =
+                "line 1\n" + //
+                "line 2    \n" + //
+                "line 3"//
+                ;
+        String expectedText =
+                "line 1\n" + //
+                "line 2\n" + //
+                "line 3\n"//
+                ;
+        Resource doc = LinterTestUtils.createDocument(text, ".txt");
+
+        LinterTestUtils.assertParse(linter, doc, expectedText, props, //
+                new Violation(doc, new Location(2, 7), new Delete(4), linter,
+                        PropertyType.trim_trailing_whitespace.getName(), "true"),
+                new Violation(doc, new Location(3, 7), Insert.endOfLine(EndOfLineValue.lf), linter,
+                        PropertyType.insert_final_newline.getName(), "true"));
+    }
+
+    @Test
     public void insert_final_newline_empty() throws IOException {
         final ResourceProperties props = ResourceProperties.builder() //
                 .property(new Property.Builder(null).type(PropertyType.insert_final_newline).value("true").build()) //
