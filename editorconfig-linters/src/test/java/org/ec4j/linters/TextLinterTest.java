@@ -155,7 +155,8 @@ public class TextLinterTest {
         LinterTestUtils.assertParse(linter, doc, expectedText, props, //
                 new Violation(doc, new Location(2, 7), new Delete(4), linter,
                         PropertyType.trim_trailing_whitespace.getName(), "true"),
-                new Violation(doc, new Location(3, 7), Insert.endOfLine(EndOfLineValue.lf), linter,
+                new Violation(doc, new Location(3, 7),
+                        Insert.endOfLine(EndOfLineValue.ofEndOfLineString(System.lineSeparator())), linter,
                         PropertyType.insert_final_newline.getName(), "true"));
     }
 
