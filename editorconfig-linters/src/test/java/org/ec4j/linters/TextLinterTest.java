@@ -141,14 +141,14 @@ public class TextLinterTest {
                 .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
                 .build();
         String text =
-                "line 1\n" + //
-                "line 2    \n" + //
+                "line 1" + System.lineSeparator() + //
+                "line 2    " + System.lineSeparator() + //
                 "line 3"//
                 ;
         String expectedText =
-                "line 1\n" + //
-                "line 2\n" + //
-                "line 3\n"//
+                "line 1" + System.lineSeparator() + //
+                "line 2" + System.lineSeparator() + //
+                "line 3" + System.lineSeparator() //
                 ;
         Resource doc = LinterTestUtils.createDocument(text, ".txt");
 
