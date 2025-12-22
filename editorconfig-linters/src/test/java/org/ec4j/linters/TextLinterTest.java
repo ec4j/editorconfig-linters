@@ -135,7 +135,7 @@ public class TextLinterTest {
     }
 
     @Test
-    public void insert_final_newline_and_trim_trailing_whitespace() throws IOException {
+    public void insert_final_newline_system_eol() throws IOException {
         final ResourceProperties props = ResourceProperties.builder() //
                 .property(new Property.Builder(null).type(PropertyType.insert_final_newline).value("true").build()) //
                 .property(new Property.Builder(null).type(PropertyType.trim_trailing_whitespace).value("true").build()) //
